@@ -9,10 +9,14 @@ module.exports.getAllMsgs = async (req, res, next) => {
 
     const msgs = await Message.find(filter)
       .limit(10)
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .populate("author");
 
-    res.send(msgs);
+    if (!msgs) {
+      return res.status(204).send();
+    }
+
+    res.status(200).send(msgs);
   } catch (error) {
     next(error);
   }
@@ -24,7 +28,7 @@ module.exports.createMsg = async (req, res, next) => {
       ...req.body,
       author: req.params.userId,
     });
-    res.send(createdMsg);
+    res.status(201).send(createdMsg);
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const rootRouter = require("./routes");
+const mongoose = require("mongoose");
 
 /* app */
 const app = express();
@@ -15,7 +16,15 @@ app.get("/", (req, res) => {
 app.use("/api", rootRouter);
 
 app.use((err, req, res, next) => {
-  res.status(500).send(err); // VERY BAD error handler
+  let status = 400;
+  // if (/validation failed/.test(err.messsage)) {
+  if (err instanceof mongoose.Error.ValidationError) {
+    status = 400
+  }
+  if (err instanceof mongoose.Error.MissingSchemaError) {
+    status = 500
+  }
+  res.status(status).send({ error: err.message }); // VERY BAD error handler
 });
 
 module.exports = app;

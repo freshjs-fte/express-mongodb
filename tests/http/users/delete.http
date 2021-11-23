@@ -1,1 +1,2 @@
 DELETE http://localhost:5000/api/users/6197f3fdb11d16c6ea3b737e
+Authorization: <тип> <данные пользователя>
