@@ -3,14 +3,11 @@ const MessageController = require("../controllers/message");
 
 /* Path - /api/users/messages */
 
-msgRouter.get("/", (req, res, next) => {
-  console.log(req.path);
-  next()
-}, MessageController.getAllMsgs);
+msgRouter.get("/", MessageController.getAllMsgs);
 
 msgRouter
   .route("/:userId")
-  .get(MessageController.getAllMsgs)
-  .post(MessageController.createMsg);
+  .get(checkAccessToken, MessageController.getAllMsgs)
+  .post(checkAccessToken, MessageController.createMsg);
 
 module.exports = msgRouter;

@@ -3,8 +3,7 @@ const { message: Message } = require("../models");
 module.exports.getAllMsgs = async (req, res, next) => {
   console.log("test");
   try {
-    const filter = {};
-    if (req.params && req.params.userId) {
+    
       filter.author = req.params.userId;
     }
 

@@ -1,6 +1,7 @@
+require('dotenv').config()
 const http = require("http");
-const app = require("./app");
 const { Server } = require("socket.io");
+const app = require("./app");
 const config = require("./configs");
 const { EVENTS } = require("./configs/socket.io");
 const { message: Message } = require("./models");

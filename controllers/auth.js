@@ -1,6 +1,12 @@
 const bcrypt = require("bcrypt");
-const { SALT_ROUNDS } = require("../configs");
+const {
+  bcrypt: { SALT_ROUNDS },
+} = require("../configs");
 const { user: User, token: Token } = require("../models");
+const {
+  createTokenPair,
+  saveRefreshToken,
+} = require("../services/jwt.service");
 
 module.exports.registerUser = async (req, res, next) => {
   try {
@@ -12,10 +18,12 @@ module.exports.registerUser = async (req, res, next) => {
     createdUser.password = undefined;
 
     // generate tokens
+    const tokenPair = await createTokenPair(createdUser);
     // save refresh token
+    saveRefreshToken(tokenPair.refreshToken, createdUser._id);
 
     // send tokens
-    res.status(201).send(createdUser);
+    res.status(201).send({ tokenPair, data: createdUser });
   } catch (error) {
     next(error);
   }
@@ -34,10 +42,12 @@ module.exports.loginUser = async (req, res, next) => {
     foundUser.password = undefined;
 
     // generate tokens
+    const tokenPair = await createTokenPair(createdUser);
     // save refresh token
+    saveRefreshToken(tokenPair.refreshToken, createdUser._id);
 
     // send tokens
-    res.status(200).send(foundUser);
+    res.status(200).send({ tokenPair, data: foundUser });
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,7 @@
 const userRouter = require("express").Router();
 const msgRouter = require("./message");
 const UserController = require("../controllers/user");
+const { checkAccessToken } = require("../middlewares/tokenCheck.mw");
 
 /* Path - /api/users */
 
