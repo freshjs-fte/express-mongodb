@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { SALT_ROUNDS } = require("../configs");
-const { user: User } = require("../models");
+const { user: User, token: Token } = require("../models");
 
 module.exports.registerUser = async (req, res, next) => {
   try {
@@ -12,7 +12,9 @@ module.exports.registerUser = async (req, res, next) => {
     createdUser.password = undefined;
 
     // generate tokens
+    // save refresh token
 
+    // send tokens
     res.status(201).send(createdUser);
   } catch (error) {
     next(error);
@@ -32,9 +34,33 @@ module.exports.loginUser = async (req, res, next) => {
     foundUser.password = undefined;
 
     // generate tokens
+    // save refresh token
 
+    // send tokens
     res.status(200).send(foundUser);
   } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.refresh = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    const foundToken = await Token.findOne({ value: refreshToken });
+    if (!foundToken) {
+      return res.status(404).send({ error: "Token not found" });
+    }
+    // verify token
+
+    // generate tokens
+    // save refresh token
+
+    // send tokens
+    res.status(200).send(foundUser);
+  } catch (error) {
+    // if token signature is not valid
+    return res.status(400).send({ error: "Token not found" });
     next(error);
   }
 };

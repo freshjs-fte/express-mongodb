@@ -1,9 +1,12 @@
 const msgRouter = require("express").Router();
 const MessageController = require("../controllers/message");
 
-/* Path - /api/users/:userId/messages */
+/* Path - /api/users/messages */
 
-msgRouter.get("/", MessageController.getAllMsgs);
+msgRouter.get("/", (req, res, next) => {
+  console.log(req.path);
+  next()
+}, MessageController.getAllMsgs);
 
 msgRouter
   .route("/:userId")

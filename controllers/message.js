@@ -1,9 +1,10 @@
 const { message: Message } = require("../models");
 
 module.exports.getAllMsgs = async (req, res, next) => {
+  console.log("test");
   try {
     const filter = {};
-    if (req.params.userId) {
+    if (req.params && req.params.userId) {
       filter.author = req.params.userId;
     }
 
@@ -13,7 +14,7 @@ module.exports.getAllMsgs = async (req, res, next) => {
       .populate("author");
 
     if (!msgs) {
-      return res.status(204).send();
+      return res.status(404).send({ error: "Not Found" });
     }
 
     res.status(200).send(msgs);

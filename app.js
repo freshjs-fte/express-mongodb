@@ -9,8 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.status(200).send("Hello, world!");
+app.use((req, res, next) => {
+  console.log(req.method, req.path);
+  // res.status(200).send("Hello, world!");
+  next()
 });
 
 app.use("/api", rootRouter);
@@ -19,10 +21,10 @@ app.use((err, req, res, next) => {
   let status = 400;
   // if (/validation failed/.test(err.messsage)) {
   if (err instanceof mongoose.Error.ValidationError) {
-    status = 400
+    status = 400;
   }
   if (err instanceof mongoose.Error.MissingSchemaError) {
-    status = 500
+    status = 500;
   }
   res.status(status).send({ error: err.message }); // VERY BAD error handler
 });
