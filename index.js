@@ -24,15 +24,15 @@ io.on("connection", (socket) => {
   socket.on(EVENTS.NEW_MESSAGE, async (data) => {
     try {
       const newMessage = await Message.create(data);
+      const foundMsg = await Message.findById(newMessage._id).populate(
+        "author"
+      );
 
-      socket.emit(EVENTS.NEW_MESSAGE, newMessage);
-
+      io.emit(EVENTS.NEW_MESSAGE, foundMsg);
     } catch (error) {
-
       return socket.emit(EVENTS.NEW_MESSAGE_ERROR, {
         error: "Cannot create message. " + error.message,
       });
-
     }
   });
 });
